@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direction: Varu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,400;1,700&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #080808;
+            --accent: #e0c097; /* Champagne Gold */
+            --rose: #ff4d6d;
+        }
+
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background: var(--bg); color: white; 
+            font-family: 'Montserrat', sans-serif; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw; height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            perspective: 1000px;
+        }
+
+        /* The Moving Background Text */
+        #bg-text {
+            position: absolute;
+            font-size: 20vw;
+            font-weight: 900;
+            color: rgba(255,255,255,0.02);
+            white-space: nowrap;
+            user-select: none;
+            z-index: 1;
+        }
+
+        #content-box {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        h1 {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 6rem;
+            margin: 0;
+            font-style: italic;
+            background: linear-gradient(to right, var(--accent), #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
+        }
+
+        .tagline {
+            font-size: 0.9rem;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-top: -10px;
+            opacity: 0.7;
+        }
+
+        /* The Compass Needle */
+        #compass {
+            width: 2px; height: 150px;
+            background: linear-gradient(to top, transparent, var(--accent), transparent);
+            margin: 40px auto;
+            position: relative;
+            transition: transform 0.2s ease-out;
+        }
+
+        #compass::after {
+            content: '';
+            position: absolute;
+            top: -5px; left: -4px;
+            width: 10px; height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--accent);
+        }
+
+        .reveal-text {
+            max-width: 400px;
+            font-family: 'Bodoni Moda', serif;
+            font-style: italic;
+            font-size: 1.4rem;
+            line-height: 1.5;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 2s ease;
+        }
+
+        .show { opacity: 1 !important; transform: translateY(0) !important; }
+
+        .btn-valentine {
+            margin-top: 40px;
+            background: none;
+            border: 1px solid white;
+            color: white;
+            padding: 15px 40px;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.5s;
+            opacity: 0;
+        }
+
+        .btn-valentine:hover {
+            background: white;
+            color: black;
+            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+        }
+
+        /* Mouse Follower */
+        #glow {
+            position: fixed;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(224, 192, 151, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="glow"></div>
+    <div id="bg-text">ALWAYS YOU</div>
+
+    <div id="container">
+        <div id="content-box">
+            <p class="tagline">Coordinates Found</p>
+            <h1>Varu</h1>
+            
+            <div id="compass"></div>
+
+            <div id="msg1" class="reveal-text">In a world full of noise...</div>
+            <div id="msg2" class="reveal-text" style="transition-delay: 0.5s;">You are my only direction.</div>
+            
+            <button id="finalBtn" class="btn-valentine" onclick="celebrate()">Will You Be My Valentine?</button>
+        </div>
+    </div>
+
+    <script>
+        const contentBox = document.getElementById('content-box');
+        const compass = document.getElementById('compass');
+        const glow = document.getElementById('glow');
+        const bgText = document.getElementById('bg-text');
+
+        window.addEventListener('mousemove', (e) => {
+            // 3D Tilt Effect
+            const x = (window.innerWidth / 2 - e.clientX) / 25;
+            const y = (window.innerHeight / 2 - e.clientY) / 25;
+            contentBox.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
+
+            // Compass Needle Following
+            const angle = Math.atan2(e.clientY - window.innerHeight / 2, e.clientX - window.innerWidth / 2);
+            compass.style.transform = `rotate(${angle + Math.PI/2} aviation)`;
+            
+            // Glow Following
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+
+            // Parallax Background
+            bgText.style.transform = `translate(${x * 2}px, ${y * 2}px)`;
+        });
+
+        // Sequential Reveal on Load
+        setTimeout(() => document.getElementById('msg1').classList.add('show'), 1000);
+        setTimeout(() => document.getElementById('msg2').classList.add('show'), 2500);
+        setTimeout(() => document.getElementById('finalBtn').style.opacity = '1', 4000);
+
+        function celebrate() {
+            alert("The destination is reached. ❤️ I love you, Varu!");
+            document.body.style.background = "#1a0005";
+        }
+    </script>
+</body>
+</html>
